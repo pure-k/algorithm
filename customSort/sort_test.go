@@ -6,20 +6,26 @@ import (
 	"testing"
 )
 
-//准确性校验
+//冒泡排序准确性校验
 //go test -v -run TestBubbleSort
 func TestBubbleSort(t *testing.T) {
-	for i := 0; i < 100; i++ {
-		nums := generateRandomArray()
-		nums1 := make([]int, len(nums), len(nums))
-		copy(nums1, nums)
-		BubbleSort(nums)
-		sort.Ints(nums1)
-		if !compareArray(nums, nums1, t) {
-			t.Error("比对失败")
-		}
-	}
+	testSort(BubbleSort, t)
+}
 
+func TestSelectionSort(t *testing.T) {
+	testSort(SelectionSort, t)
+}
+
+func TestInsertionSort(t *testing.T) {
+	testSort(InsertionSort, t)
+}
+
+func TestMergeSort(t *testing.T) {
+	testSort(MergeSort, t)
+}
+
+func TestQuickSort(t *testing.T) {
+	testSort(QuickSort, t)
 }
 
 //冒泡排序性能测试
@@ -28,6 +34,38 @@ func BenchmarkBubbleSort(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		nums := generateRandomArray()
 		BubbleSort(nums)
+	}
+}
+
+//选择排序性能测试
+func BenchmarkSelectionSort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+
+		nums := generateRandomArray()
+		SelectionSort(nums)
+	}
+}
+
+//插入排序性能测试
+func BenchmarkInsertionSort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		nums := generateRandomArray()
+		InsertionSort(nums)
+	}
+}
+
+//归并排序性能测试
+func BenchmarkMergeSort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		nums := generateRandomArray()
+		MergeSort(nums)
+	}
+}
+
+func BenchmarkQuickSort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		nums := generateRandomArray()
+		QuickSort(nums)
 	}
 }
 
@@ -42,12 +80,27 @@ func BenchmarkSort(b *testing.B) {
 
 //随机数组
 func generateRandomArray() []int {
-	lens := rand.Intn(10000)
+	lens := rand.Intn(100)
+	//lens := 100
 	var ret []int
 	for i := 0; i < lens; i++ {
 		ret = append(ret, rand.Intn(10000))
 	}
 	return ret
+}
+
+//验证其他排序方法准确性
+func testSort(sortFunc func(nums []int), t *testing.T) {
+	for i := 0; i < 100; i++ {
+		nums := generateRandomArray()
+		nums1 := make([]int, len(nums), len(nums))
+		copy(nums1, nums)
+		sortFunc(nums)
+		sort.Ints(nums1)
+		if !compareArray(nums, nums1, t) {
+			t.Error("比对失败")
+		}
+	}
 }
 
 //比较两个数组
