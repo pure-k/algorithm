@@ -27,6 +27,13 @@ func TestMergeSort(t *testing.T) {
 func TestQuickSort(t *testing.T) {
 	testSort(QuickSort, t)
 }
+func TestHeapSort(t *testing.T) {
+	testSort(HeapSort, t)
+}
+
+func TestCountingSort(t *testing.T) {
+	testSort(CountingSort, t)
+}
 
 //冒泡排序性能测试
 //go test -bench BenchmarkBubbleSort
@@ -40,7 +47,6 @@ func BenchmarkBubbleSort(b *testing.B) {
 //选择排序性能测试
 func BenchmarkSelectionSort(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-
 		nums := generateRandomArray()
 		SelectionSort(nums)
 	}
@@ -68,7 +74,19 @@ func BenchmarkQuickSort(b *testing.B) {
 		QuickSort(nums)
 	}
 }
+func BenchmarkHeapSort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		nums := generateRandomArray()
+		HeapSort(nums)
+	}
+}
 
+func BenchmarkCountingSort(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		nums := generateRandomArray()
+		CountingSort(nums)
+	}
+}
 //系统排序性能测试
 //go test -bench BenchmarkSort
 func BenchmarkSort(b *testing.B) {
@@ -80,8 +98,7 @@ func BenchmarkSort(b *testing.B) {
 
 //随机数组
 func generateRandomArray() []int {
-	lens := rand.Intn(100)
-	//lens := 100
+	lens := rand.Intn(10000)
 	var ret []int
 	for i := 0; i < lens; i++ {
 		ret = append(ret, rand.Intn(10000))
