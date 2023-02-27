@@ -1,6 +1,7 @@
 package dataStructure
 
 import (
+	"container/list"
 	"fmt"
 	"github.com/golang-collections/collections/stack"
 )
@@ -62,19 +63,55 @@ func InOrderUnRecur(head *NodeTree) []int {
 	return ret
 }
 //非递归实现后序遍历 左右头
+//准备两个栈，先按头右左取出放入另一个栈，参考非递归实现前序遍历，在出栈
 func PosOrderUnRecur(head *NodeTree) []int {
+	nodeStack := stack.New()
+	nodeStack.Push(head)
+	nodeStack2 := stack.New()
+	var ret []int
+	for nodeStack.Len() > 0 {
+		cur := (nodeStack.Pop()).(*NodeTree)
+		nodeStack2.Push(cur)
+		if cur.right != nil {
+			nodeStack.Push(cur.right)
+		}
+		if cur.left != nil {
+			nodeStack.Push(cur.left)
+		}
+	}
+	for nodeStack2.Len() >0 {
+		ret = append(ret, (nodeStack2.Pop()).(*NodeTree).value)
+	}
 
+	return ret
+}
+
+func WidthTraverse(head *NodeTree) []int {
+	nodeList := list.New()
+	nodeList.PushFront(head)
+	var ret []int
+	for nodeList.Len() > 0 {
+		cur := (nodeList.Remove(nodeList.Back())).(*NodeTree)
+		ret = append(ret, cur.value)
+		if cur.left != nil {
+			nodeList.PushFront(cur.left)
+		}
+		if cur.right != nil {
+			nodeList.PushFront(cur.right)
+		}
+
+	}
+	return ret
 }
 
 func Tree()  {
 	tree := generateNodeTree()
-	var ret []int
 	//fmt.Println(PreOrderUnRecur(&tree))
-
-	ret = ForeachTree(&tree,ret)
-	fmt.Println(ret)
-
-	fmt.Println(InOrderUnRecur(&tree))
+fmt.Println(WidthTraverse(&tree))
+	//ret = ForeachTree(&tree,ret)
+	//fmt.Println(ret)
+	//
+	//fmt.Println(InOrderUnRecur(&tree))
 }
 
 func generateNodeTree() NodeTree {
